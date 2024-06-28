@@ -11,7 +11,7 @@ export const useSocket = () => {
 
 function SocketProvider({ children }) {
 
-    const socket = useMemo(() => io('localhost:3000'))
+    const socket = useMemo(() => io('https://webrtc-server-o2bg.onrender.com'))
 
     return (
         <SocketContext.Provider value={socket}>
