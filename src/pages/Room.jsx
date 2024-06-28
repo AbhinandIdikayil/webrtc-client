@@ -33,10 +33,18 @@ function Room() {
     }, [remoteSocketId, socket]);
 
     const sendStreams = useCallback(() => {
+        const senders = peer.peer.getSenders();
         for (const track of myStream.getTracks()) {
-            peer.peer.addTrack(track, myStream)
+            const sender = senders.find(s => s.track && s.track.kind === track.kind);
+            if (sender) {
+                // If a sender for this track kind already exists, replace the track
+                sender.replaceTrack(track);
+            } else {
+                // If no sender exists for this track kind, add a new track
+                peer.peer.addTrack(track, myStream);
+            }
         }
-    }, [myStream])
+    }, [myStream,peer.peer])
 
     const handleCallAccepted = useCallback(async ({ from, ans }) => {
         peer.setLoaclDescription(ans)
